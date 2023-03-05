@@ -10,7 +10,7 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const { name, username, email, password } = createUserDto;
+    const { name, username, email, password, roles } = createUserDto;
 
     const existingUser = await this.userModel
       .findOne()
@@ -27,6 +27,7 @@ export class UsersService {
       username,
       email,
       password: hashedPassword,
+      roles,
     });
 
     // Save the new user to the database

@@ -10,12 +10,14 @@ import {
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Roles, Role } from '../roles/roles.decorator';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
+  @Roles(Role.Admin, Role.Owner)
   async create(@Body() createProductDto: CreateProductDto) {
     return await this.productService.create(createProductDto);
   }
@@ -31,6 +33,7 @@ export class ProductController {
   }
 
   @Put(':id')
+  @Roles(Role.Admin, Role.Owner)
   async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
@@ -39,6 +42,7 @@ export class ProductController {
   }
 
   @Delete(':id')
+  @Roles(Role.Admin, Role.Owner)
   async remove(@Param('id') id: string) {
     return await this.productService.remove(id);
   }
