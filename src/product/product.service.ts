@@ -10,8 +10,11 @@ export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
   ) {}
-  async create(createProductDto: CreateProductDto) {
-    const createdProduct = new this.productModel(createProductDto);
+  async create(createProductDto: CreateProductDto, currentUser: any) {
+    const createdProduct = new this.productModel({
+      ...createProductDto,
+      createdBy: currentUser.username,
+    });
     return await createdProduct.save();
   }
 
@@ -29,9 +32,18 @@ export class ProductService {
     }
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(
+    id: string,
+    updateProductDto: UpdateProductDto,
+    currentUser: any,
+  ) {
     try {
-      await this.productModel.findByIdAndUpdate(id, updateProductDto).exec();
+      await this.productModel
+        .findByIdAndUpdate(id, {
+          ...updateProductDto,
+          updatedBy: currentUser.username,
+        })
+        .exec();
       return `Product with id ${id} has been updated`;
     } catch (error) {
       console.log(error);

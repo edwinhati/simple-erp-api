@@ -6,6 +6,7 @@ import {
   Put,
   Param,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -18,8 +19,8 @@ export class ProductController {
 
   @Post()
   @Roles(Role.Admin, Role.Owner)
-  async create(@Body() createProductDto: CreateProductDto) {
-    return await this.productService.create(createProductDto);
+  async create(@Body() createProductDto: CreateProductDto, @Request() req) {
+    return await this.productService.create(createProductDto, req.user);
   }
 
   @Get()
@@ -37,8 +38,9 @@ export class ProductController {
   async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
+    @Request() req,
   ) {
-    return await this.productService.update(id, updateProductDto);
+    return await this.productService.update(id, updateProductDto, req.user);
   }
 
   @Delete(':id')
