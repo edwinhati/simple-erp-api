@@ -24,8 +24,7 @@ export class ProductService {
 
   async findOne(id: string) {
     try {
-      const product = await this.productModel.findById(id).exec();
-      return product;
+      return await this.productModel.findById(id).exec();
     } catch (error) {
       console.log(error);
       throw new NotFoundException('Product not found');
